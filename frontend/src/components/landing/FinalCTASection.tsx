@@ -25,7 +25,7 @@ export const FinalCTASection: React.FC = () => {
         </div>
 
         <div className="relative z-10 flex flex-wrap items-center justify-center gap-3 pt-2">
-          <Link href="/" className="btn-primary text-xs px-6 py-3.5 rounded-xl gap-2 font-bold shadow-lg hover:shadow-blue-500/20">
+          <Link href="/dashboard" className="btn-primary text-xs px-6 py-3.5 rounded-xl gap-2 font-bold shadow-lg hover:shadow-blue-500/20">
             <span>Open Security Console</span>
             <ArrowRight className="w-4 h-4" />
           </Link>

@@ -39,7 +39,7 @@ export default function NotFound() {
       </div>
 
       <Link
-        href="/"
+        href="/dashboard"
         className="btn-primary inline-flex gap-2 px-6 py-2.5 text-[14px] rounded-xl"
       >
         <Home className="w-4 h-4" />

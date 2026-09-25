@@ -77,7 +77,7 @@ export const HeroSection: React.FC = () => {
             className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 pt-1"
           >
             <Link
-              href="/"
+              href="/dashboard"
               className="btn-primary text-sm px-6 py-3.5 rounded-xl gap-2.5 font-bold shadow-md hover:shadow-lg transition-all"
             >
               <span>Explore Security Console</span>

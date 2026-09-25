@@ -52,7 +52,8 @@ yarn-debug.log*
 yarn-error.log*
 
 # Database & Runtime Outputs
-backend/pravaah.db
+*.db
+backend/*.db
 backend/reports_output/*
 !backend/reports_output/.gitkeep
 backend/uploads/*

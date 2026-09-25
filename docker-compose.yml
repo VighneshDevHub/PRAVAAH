@@ -1,0 +1,28 @@
+version: '3.8'
+
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: securemailscope_backend
+    ports:
+      - "8000:8000"
+    environment:
+      - PROJECT_NAME=SecureMailScope
+      - DATABASE_URL=sqlite+aiosqlite:////app/securemailscope.db
+    volumes:
+      - ./backend/uploads:/app/uploads
+      - ./backend/reports_output:/app/reports_output
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: securemailscope_frontend
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
+    environment:
+      - NODE_ENV=production

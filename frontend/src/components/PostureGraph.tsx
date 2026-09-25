@@ -37,17 +37,30 @@ export interface GraphEdge {
   status?: 'good' | 'warning' | 'high' | 'critical';
 }
 
+export const STAGE_COLUMNS = [
+  { stage: 1, label: 'EMAIL DOMAIN', x: 50 },
+  { stage: 2, label: 'MAIL SERVER', x: 270 },
+  { stage: 3, label: 'EMAIL SESSION', x: 490 },
+  { stage: 4, label: 'STARTTLS / TLS', x: 710 },
+  { stage: 5, label: 'CRYPTO PARAMS', x: 930 },
+  { stage: 6, label: 'CERTIFICATE', x: 1150 },
+  { stage: 7, label: 'SECURITY FINDING', x: 1370 },
+  { stage: 8, label: 'EVIDENCE', x: 1590 },
+  { stage: 9, label: 'RECOMMENDATION', x: 1810 },
+];
+
 const INITIAL_NODES: GraphNode[] = [
+  // ── STAGE 1: EMAIL DOMAIN ──
   {
     id: 'node-domain',
     category: 'EMAIL DOMAIN',
     label: 'enterprise.gov',
-    subtitle: 'Primary Government Domain',
+    subtitle: 'Primary Govt Domain',
     status: 'good',
     statusText: 'Verified Active',
     icon: Globe,
     x: 50,
-    y: 220,
+    y: 260,
     details: {
       title: 'Email Domain Infrastructure',
       sectionHeader: 'DNS & Policy Security',
@@ -62,6 +75,8 @@ const INITIAL_NODES: GraphNode[] = [
       forensicNotes: 'DNS TXT policies verified via authoritative name server lookup.',
     },
   },
+
+  // ── STAGE 2: MAIL SERVER ──
   {
     id: 'node-server',
     category: 'MAIL SERVER',
@@ -71,7 +86,7 @@ const INITIAL_NODES: GraphNode[] = [
     statusText: 'Online (Port 587)',
     icon: Server,
     x: 270,
-    y: 220,
+    y: 260,
     details: {
       title: 'Mail Server Endpoint',
       sectionHeader: 'Network Endpoint Details',
@@ -86,6 +101,8 @@ const INITIAL_NODES: GraphNode[] = [
       forensicNotes: 'Target host identified in passive PCAP TCP SYN/ACK handshake.',
     },
   },
+
+  // ── STAGE 3: EMAIL SESSION ──
   {
     id: 'node-session-42',
     category: 'EMAIL SESSION',
@@ -95,7 +112,7 @@ const INITIAL_NODES: GraphNode[] = [
     statusText: 'Completed (Secure)',
     icon: Activity,
     x: 490,
-    y: 110,
+    y: 120,
     details: {
       title: 'Reconstructed Email Session #042',
       sectionHeader: 'Session State & Telemetry',
@@ -121,7 +138,7 @@ const INITIAL_NODES: GraphNode[] = [
     statusText: 'Warning Flags',
     icon: Activity,
     x: 490,
-    y: 340,
+    y: 400,
     details: {
       title: 'Reconstructed Email Session #043',
       sectionHeader: 'Session State & Telemetry',
@@ -138,16 +155,18 @@ const INITIAL_NODES: GraphNode[] = [
       navTarget: { type: 'session', path: '/sessions' },
     },
   },
+
+  // ── STAGE 4: STARTTLS / TLS ──
   {
     id: 'node-starttls',
     category: 'STARTTLS',
-    label: 'Upgrade Detected',
-    subtitle: 'TCP Stream #42',
+    label: 'Upgrade Offered',
+    subtitle: 'RFC 3207 Upgraded',
     status: 'good',
-    statusText: 'RFC 3207 Verified',
+    statusText: 'Upgrade Verified',
     icon: Zap,
     x: 710,
-    y: 50,
+    y: 120,
     details: {
       title: 'STARTTLS Protocol Upgrade',
       sectionHeader: 'Cleartext to Encrypted Transition',
@@ -162,23 +181,48 @@ const INITIAL_NODES: GraphNode[] = [
     },
   },
   {
-    id: 'node-tls13',
-    category: 'TLS HANDSHAKE',
-    label: 'TLS 1.3',
-    subtitle: 'AES-256-GCM',
-    status: 'good',
-    statusText: 'Modern Cryptography',
+    id: 'node-tls12',
+    category: 'STARTTLS / TLS',
+    label: 'Direct TLS 1.2',
+    subtitle: 'Implicit Secure Port',
+    status: 'warning',
+    statusText: 'Legacy Protocol',
     icon: Key,
     x: 710,
-    y: 170,
+    y: 400,
     details: {
-      title: 'TLS 1.3 Handshake Telemetry',
+      title: 'Direct TLS Handshake Telemetry',
+      sectionHeader: 'Handshake & Cipher Details',
+      properties: [
+        { label: 'TLS VERSION', value: 'TLS 1.2 (0x0303)' },
+        { label: 'CIPHER SUITE', value: 'TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256', isWarning: true },
+        { label: 'FORWARD SECRECY', value: 'Supported (ECDHE_P256)' },
+        { label: 'POLICY WARNING', value: 'NIST SP 800-52 recommends TLS 1.3 default' },
+      ],
+      evidenceConfidence: 'HIGH',
+      forensicNotes: 'TLS 1.2 in use. Legacy protocol negotiation observed without TLS 1.3 support.',
+    },
+  },
+
+  // ── STAGE 5: CRYPTO PARAMS ──
+  {
+    id: 'node-tls13',
+    category: 'CRYPTO PARAMS',
+    label: 'TLS 1.3 / X25519',
+    subtitle: 'AES-256-GCM + PFS',
+    status: 'good',
+    statusText: 'Modern Cipher',
+    icon: Lock,
+    x: 930,
+    y: 120,
+    details: {
+      title: 'Cryptographic Parameters & Key Exchange',
       sectionHeader: 'Handshake & Cipher Details',
       properties: [
         { label: 'TLS VERSION', value: 'TLS 1.3 (0x0304)' },
         { label: 'CIPHER SUITE', value: 'TLS_AES_256_GCM_SHA384 (0x1302)' },
-        { label: 'KEY EXCHANGE', value: 'X25519 (ECDHE)' },
-        { label: 'SNI HOSTNAME', value: 'mail.enterprise.gov' },
+        { label: 'KEY EXCHANGE', value: 'X25519 (ECDHE Forward Secrecy)' },
+        { label: 'FORWARD SECRECY', value: 'YES (Perfect Forward Secrecy Active)' },
         { label: 'ALPN PROTOCOL', value: 'smtp' },
       ],
       evidenceConfidence: 'HIGH',
@@ -186,62 +230,40 @@ const INITIAL_NODES: GraphNode[] = [
     },
   },
   {
-    id: 'node-tls12',
-    category: 'TLS HANDSHAKE',
-    label: 'TLS 1.2',
-    subtitle: 'ECDHE-RSA-AES128',
+    id: 'node-crypto-legacy',
+    category: 'CRYPTO PARAMS',
+    label: 'CBC Cipher Suite',
+    subtitle: 'SHA-1 Signature',
     status: 'warning',
-    statusText: 'Legacy Policy',
-    icon: Key,
-    x: 710,
-    y: 340,
-    details: {
-      title: 'TLS 1.2 Handshake Telemetry',
-      sectionHeader: 'Handshake & Cipher Details',
-      properties: [
-        { label: 'TLS VERSION', value: 'TLS 1.2 (0x0303)' },
-        { label: 'CIPHER SUITE', value: 'TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256', isWarning: true },
-        { label: 'FORWARD SECRECY', value: 'Supported (ECDHE_P256)' },
-        { label: 'SNI HOSTNAME', value: 'Not Available (TLS 1.3 Encrypted Handshake Limit)', isNotAvailable: true },
-        { label: 'CLIENT CERT', value: 'Not Observed', isNotAvailable: true },
-      ],
-      evidenceConfidence: 'LIMITED',
-      forensicNotes: 'TLS 1.2 in use. RFC 8996 recommends migrating to TLS 1.3.',
-    },
-  },
-  {
-    id: 'node-crypto-params',
-    category: 'CRYPTO PARAMETERS',
-    label: 'X25519 Curve',
-    subtitle: 'Forward Secrecy: YES',
-    status: 'good',
-    statusText: 'PFS Enabled',
+    statusText: 'Weak Parameters',
     icon: Lock,
     x: 930,
-    y: 110,
+    y: 400,
     details: {
-      title: 'Cryptographic Parameters',
-      sectionHeader: 'Key Exchange & PFS Verification',
+      title: 'Legacy Cryptographic Parameters',
+      sectionHeader: 'Cryptographic Weakness Identification',
       properties: [
-        { label: 'ELLIPTIC CURVE', value: 'x25519 (Curve25519)' },
-        { label: 'FORWARD SECRECY', value: 'YES (Perfect Forward Secrecy Active)' },
-        { label: 'SIGNATURE ALGORITHM', value: 'ecdsa_secp256r1_sha256' },
-        { label: 'QUANTUM SAFE', value: 'No (Classical ECC)' },
+        { label: 'TLS VERSION', value: 'TLS 1.2' },
+        { label: 'CIPHER BLOCK', value: 'AES-128-CBC (Vulnerable to LUCKY13)' },
+        { label: 'SIGNATURE HASH', value: 'SHA-1 (Deprecated Signature Algorithm)', isWarning: true },
+        { label: 'KEY SIZE', value: 'RSA 2048 bit' },
       ],
       evidenceConfidence: 'HIGH',
-      forensicNotes: 'Ephemeral key exchange prevents retrospective decryption if server keys leak.',
+      forensicNotes: 'Handshake utilized legacy cipher suite with weak digest signature.',
     },
   },
+
+  // ── STAGE 6: CERTIFICATE ──
   {
     id: 'node-cert-valid',
     category: 'CERTIFICATE',
     label: 'mail.enterprise.gov',
-    subtitle: 'Valid (120 days)',
+    subtitle: 'Valid (120 days left)',
     status: 'good',
     statusText: 'X.509 Valid',
     icon: Award,
-    x: 930,
-    y: 230,
+    x: 1150,
+    y: 120,
     details: {
       title: 'X.509 Certificate Chain Inspection',
       sectionHeader: 'Certificate Validity & Public Key',
@@ -267,8 +289,8 @@ const INITIAL_NODES: GraphNode[] = [
     status: 'high',
     statusText: 'EXPIRED X.509',
     icon: Award,
-    x: 930,
-    y: 370,
+    x: 1150,
+    y: 400,
     details: {
       title: 'X.509 Certificate Chain Inspection',
       sectionHeader: 'Expired Certificate Evidence',
@@ -285,6 +307,8 @@ const INITIAL_NODES: GraphNode[] = [
       navTarget: { type: 'certificate', path: '/certificates' },
     },
   },
+
+  // ── STAGE 7: SECURITY FINDING ──
   {
     id: 'node-finding-low',
     category: 'SECURITY FINDING',
@@ -293,8 +317,8 @@ const INITIAL_NODES: GraphNode[] = [
     status: 'good',
     statusText: 'PASS (Low Risk)',
     icon: ShieldCheck,
-    x: 1150,
-    y: 110,
+    x: 1370,
+    y: 120,
     details: {
       title: 'Security Finding Assessment',
       sectionHeader: 'Evaluated Finding Parameters',
@@ -312,12 +336,12 @@ const INITIAL_NODES: GraphNode[] = [
     id: 'node-finding-high',
     category: 'SECURITY FINDING',
     label: 'Certificate Expired',
-    subtitle: 'High Severity Vulnerability',
+    subtitle: 'High Severity Issue',
     status: 'critical',
     statusText: 'HIGH / CRITICAL',
     icon: ShieldAlert,
-    x: 1150,
-    y: 340,
+    x: 1370,
+    y: 400,
     details: {
       title: 'Security Finding Assessment',
       sectionHeader: 'Evaluated Vulnerability Parameters',
@@ -332,16 +356,40 @@ const INITIAL_NODES: GraphNode[] = [
       forensicNotes: 'Clients connecting to port 993 receive untrusted/expired identity proof.',
     },
   },
+
+  // ── STAGE 8: EVIDENCE ──
+  {
+    id: 'node-evidence-ok',
+    category: 'EVIDENCE',
+    label: 'Session Audit Log',
+    subtitle: 'Verified Compliant',
+    status: 'evidence',
+    statusText: 'Verified Log',
+    icon: FileText,
+    x: 1590,
+    y: 120,
+    details: {
+      title: 'Compliant Session Evidence Log',
+      sectionHeader: 'Audit Trace Records',
+      properties: [
+        { label: 'AUDIT RECORD ID', value: 'LOG-2026-9901' },
+        { label: 'INTEGRITY HASH', value: 'SHA256: 4a8e991b0c...' },
+        { label: 'STATUS', value: 'PASSED SECURITY POLICIES' },
+      ],
+      evidenceConfidence: 'HIGH',
+      forensicNotes: 'Telemetry log registered clean TLS 1.3 handshake.',
+    },
+  },
   {
     id: 'node-pcap-evidence',
-    category: 'PCAP EVIDENCE',
-    label: 'Frame #18472',
+    category: 'EVIDENCE',
+    label: 'PCAP Frame #18472',
     subtitle: 'TCP Stream #42',
     status: 'evidence',
     statusText: 'Captured Frame',
     icon: FileSearch,
-    x: 1370,
-    y: 340,
+    x: 1590,
+    y: 400,
     details: {
       title: 'PCAP Frame & Packet Evidence',
       sectionHeader: 'Raw Packet Capture Correlation',
@@ -357,6 +405,29 @@ const INITIAL_NODES: GraphNode[] = [
       navTarget: { type: 'evidence', path: '/evidence' },
     },
   },
+
+  // ── STAGE 9: RECOMMENDATION ──
+  {
+    id: 'node-recom-low',
+    category: 'RECOMMENDATION',
+    label: 'Continuous Monitor',
+    subtitle: 'Maintain Baseline',
+    status: 'good',
+    statusText: 'Compliant',
+    icon: CheckCircle2,
+    x: 1810,
+    y: 120,
+    details: {
+      title: 'Security Maintenance Guidance',
+      sectionHeader: 'Operational Policy Maintenance',
+      properties: [
+        { label: 'RECOMMENDED ACTION', value: 'Maintain automated daily certificate renewal checks' },
+        { label: 'NEXT REVIEW', value: '30 Days' },
+      ],
+      evidenceConfidence: 'HIGH',
+      forensicNotes: 'No immediate action required.',
+    },
+  },
   {
     id: 'node-recom-high',
     category: 'RECOMMENDATION',
@@ -365,8 +436,8 @@ const INITIAL_NODES: GraphNode[] = [
     status: 'warning',
     statusText: 'Action Required',
     icon: Cpu,
-    x: 1580,
-    y: 340,
+    x: 1810,
+    y: 400,
     details: {
       title: 'Remediation & Action Plan',
       sectionHeader: 'Forensic Remediation Guidance',
@@ -383,20 +454,36 @@ const INITIAL_NODES: GraphNode[] = [
 ];
 
 const INITIAL_EDGES: GraphEdge[] = [
-  { id: 'e-dom-srv',    source: 'node-domain',      target: 'node-server',       label: 'hosts' },
-  { id: 'e-srv-s42',    source: 'node-server',      target: 'node-session-42',   label: 'establishes' },
-  { id: 'e-srv-s43',    source: 'node-server',      target: 'node-session-43',   label: 'establishes', status: 'warning' },
-  { id: 'e-s42-stls',   source: 'node-session-42',  target: 'node-starttls',     label: 'upgrades via' },
-  { id: 'e-stls-t13',   source: 'node-starttls',    target: 'node-tls13',        label: 'negotiates' },
-  { id: 'e-t13-crypto', source: 'node-tls13',       target: 'node-crypto-params',label: 'configures' },
-  { id: 'e-t13-cert1',  source: 'node-tls13',       target: 'node-cert-valid',   label: 'presents' },
-  { id: 'e-crypto-f1',  source: 'node-crypto-params',target: 'node-finding-low', label: 'evaluates' },
-  { id: 'e-cert1-f1',   source: 'node-cert-valid',  target: 'node-finding-low',  label: 'verifies' },
-  { id: 'e-s43-t12',    source: 'node-session-43',  target: 'node-tls12',        label: 'negotiates', status: 'warning' },
-  { id: 'e-t12-cert2',  source: 'node-tls12',       target: 'node-cert-expired', label: 'presents', status: 'warning' },
-  { id: 'e-cert2-f2',   source: 'node-cert-expired',target: 'node-finding-high',label: 'triggers', status: 'critical' },
-  { id: 'e-f2-pcap2',   source: 'node-finding-high',target: 'node-pcap-evidence',label: 'supported by', status: 'critical' },
-  { id: 'e-pcap2-r2',   source: 'node-pcap-evidence',target: 'node-recom-high',  label: 'remediates', status: 'warning' },
+  // Stage 1 -> Stage 2
+  { id: 'e-dom-srv',     source: 'node-domain',      target: 'node-server',       label: 'hosts' },
+
+  // Stage 2 -> Stage 3
+  { id: 'e-srv-s42',     source: 'node-server',      target: 'node-session-42',   label: 'establishes' },
+  { id: 'e-srv-s43',     source: 'node-server',      target: 'node-session-43',   label: 'establishes', status: 'warning' },
+
+  // Stage 3 -> Stage 4
+  { id: 'e-s42-stls',    source: 'node-session-42',  target: 'node-starttls',     label: 'upgrades via' },
+  { id: 'e-s43-t12',     source: 'node-session-43',  target: 'node-tls12',        label: 'negotiates', status: 'warning' },
+
+  // Stage 4 -> Stage 5
+  { id: 'e-stls-t13',    source: 'node-starttls',    target: 'node-tls13',        label: 'negotiates' },
+  { id: 'e-t12-crypto',  source: 'node-tls12',       target: 'node-crypto-legacy',label: 'uses legacy', status: 'warning' },
+
+  // Stage 5 -> Stage 6
+  { id: 'e-t13-cert1',   source: 'node-tls13',       target: 'node-cert-valid',   label: 'presents' },
+  { id: 'e-crypto-cert2',source: 'node-crypto-legacy',target: 'node-cert-expired', label: 'binds to', status: 'warning' },
+
+  // Stage 6 -> Stage 7
+  { id: 'e-cert1-f1',    source: 'node-cert-valid',  target: 'node-finding-low',  label: 'verifies' },
+  { id: 'e-cert2-f2',    source: 'node-cert-expired',target: 'node-finding-high',label: 'triggers', status: 'critical' },
+
+  // Stage 7 -> Stage 8
+  { id: 'e-f1-ev1',      source: 'node-finding-low', target: 'node-evidence-ok',  label: 'logged in' },
+  { id: 'e-f2-pcap2',    source: 'node-finding-high',target: 'node-pcap-evidence',label: 'supported by', status: 'critical' },
+
+  // Stage 8 -> Stage 9
+  { id: 'e-ev1-r1',      source: 'node-evidence-ok', target: 'node-recom-low',   label: 'recommends' },
+  { id: 'e-pcap2-r2',    source: 'node-pcap-evidence',target: 'node-recom-high',  label: 'remediates', status: 'warning' },
 ];
 
 export const PostureGraph: React.FC = () => {
@@ -404,8 +491,8 @@ export const PostureGraph: React.FC = () => {
   const [nodes, setNodes] = useState<GraphNode[]>(INITIAL_NODES);
   const [selectedNodeId, setSelectedNodeId] = useState<string>('node-finding-high');
   const [searchQuery, setSearchQuery] = useState('');
-  const [scale, setScale] = useState(0.85);
-  const [pan, setPan] = useState({ x: 30, y: 30 });
+  const [scale, setScale] = useState(0.78);
+  const [pan, setPan] = useState({ x: 20, y: 30 });
   const [isTracingFinding, setIsTracingFinding] = useState(false);
   const [draggingNodeId, setDraggingNodeId] = useState<string | null>(null);
   const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
@@ -429,6 +516,7 @@ export const PostureGraph: React.FC = () => {
       'node-server',
       'node-session-43',
       'node-tls12',
+      'node-crypto-legacy',
       'node-cert-expired',
       'node-finding-high',
       'node-pcap-evidence',
@@ -444,7 +532,8 @@ export const PostureGraph: React.FC = () => {
       'e-dom-srv',
       'e-srv-s43',
       'e-s43-t12',
-      'e-t12-cert2',
+      'e-t12-crypto',
+      'e-crypto-cert2',
       'e-cert2-f2',
       'e-f2-pcap2',
       'e-pcap2-r2',
@@ -465,8 +554,8 @@ export const PostureGraph: React.FC = () => {
   const handleZoomIn = () => setScale((s) => Math.min(1.4, s + 0.1));
   const handleZoomOut = () => setScale((s) => Math.max(0.4, s - 0.1));
   const handleResetFit = () => {
-    setScale(0.85);
-    setPan({ x: 30, y: 30 });
+    setScale(0.78);
+    setPan({ x: 20, y: 30 });
     setIsTracingFinding(false);
     setSelectedNodeId('node-finding-high');
     setSearchQuery('');
@@ -556,11 +645,11 @@ export const PostureGraph: React.FC = () => {
               </h2>
               <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 text-[10px] font-mono font-bold">
                 <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-                Analysis Engine Online
+                9-Stage Pipeline Online
               </span>
             </div>
             <p className="text-xs text-slate-400 font-mono">
-              Trace security posture from email infrastructure → session → cryptography → finding → evidence.
+              Structured forensic graph mapping DOMAIN → SERVER → SESSION → TLS → CRYPTO → CERT → FINDING → EVIDENCE → RECOMMENDATION.
             </p>
           </div>
         </div>
@@ -685,10 +774,44 @@ export const PostureGraph: React.FC = () => {
             className="w-full h-full relative origin-top-left transition-transform duration-75"
             style={{
               transform: `translate(${pan.x}px, ${pan.y}px) scale(${scale})`,
-              width: '1800px',
-              height: '800px',
+              width: '2050px',
+              height: '580px',
             }}
           >
+            {/* ── STAGE PIPELINE HEADERS & COLUMN SWIMLANES ── */}
+            <div className="absolute top-0 left-0 w-full pointer-events-none z-0">
+              {STAGE_COLUMNS.map((col) => (
+                <div
+                  key={col.stage}
+                  style={{ left: `${col.x}px`, width: '176px' }}
+                  className="absolute top-3 flex flex-col items-center"
+                >
+                  <div className="w-full py-1.5 px-2 bg-slate-900/90 border border-slate-800 rounded-lg text-center font-mono shadow-md backdrop-blur-sm">
+                    <span className="text-[9px] text-blue-400 font-extrabold block">STAGE 0{col.stage}</span>
+                    <span className="text-[10px] text-slate-200 font-extrabold font-grotesk tracking-tight uppercase truncate block">
+                      {col.label}
+                    </span>
+                  </div>
+                  {/* Dotted Vertical Column Guide Line */}
+                  <div
+                    className="w-[1px] bg-slate-800/60 mt-2 border-r border-dashed border-slate-800"
+                    style={{ height: '480px' }}
+                  />
+                </div>
+              ))}
+
+              {/* Parallel Track Row Labels */}
+              <div className="absolute left-3 top-[100px] text-[10px] font-mono font-bold text-emerald-400/80 uppercase tracking-wider flex items-center gap-1 bg-emerald-950/40 border border-emerald-900/50 px-2 py-1 rounded-md">
+                <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+                TRACK A: SECURE FLOW (TLS 1.3)
+              </div>
+
+              <div className="absolute left-3 top-[380px] text-[10px] font-mono font-bold text-red-400/80 uppercase tracking-wider flex items-center gap-1 bg-red-950/40 border border-red-900/50 px-2 py-1 rounded-md">
+                <span className="w-2 h-2 rounded-full bg-red-500 animate-pulse" />
+                TRACK B: INCIDENT FLOW (EXPIRED CERT)
+              </div>
+            </div>
+
             {/* SVG Connection Lines & Labels */}
             <svg className="absolute inset-0 w-full h-full pointer-events-none z-0">
               <defs>
@@ -732,9 +855,9 @@ export const PostureGraph: React.FC = () => {
                 const tgtNode = nodeMap.get(edge.target);
                 if (!srcNode || !tgtNode) return null;
 
-                const srcX = srcNode.x + 90; // center offset of node card (width ~180)
-                const srcY = srcNode.y + 40; // center offset of node card (height ~80)
-                const tgtX = tgtNode.x + 90;
+                const srcX = srcNode.x + 88; // center offset of node card (width 176px)
+                const srcY = srcNode.y + 40; // center offset of node card (height ~80px)
+                const tgtX = tgtNode.x + 88;
                 const tgtY = tgtNode.y + 40;
 
                 const isTraced = tracedEdgeIds.has(edge.id);

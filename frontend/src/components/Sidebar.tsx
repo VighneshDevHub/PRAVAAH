@@ -28,7 +28,7 @@ const NAV_GROUPS: NavGroup[] = [
   {
     groupName: 'OVERVIEW',
     items: [
-      { href: '/', label: 'SOC Dashboard', icon: LayoutDashboard, exact: true },
+      { href: '/dashboard', label: 'SOC Dashboard', icon: LayoutDashboard },
     ],
   },
   {
@@ -104,7 +104,7 @@ export const Sidebar: React.FC = () => {
         className="flex items-center justify-between h-16 px-4 shrink-0 border-b"
         style={{ borderColor: 'var(--border)' }}
       >
-        <Link href="/landing" className="flex items-center gap-2.5 min-w-0 overflow-hidden group">
+        <Link href="/" className="flex items-center gap-2.5 min-w-0 overflow-hidden group">
           <img
             src="/ntro-logo3.png"
             alt="NTRO Logo Light"

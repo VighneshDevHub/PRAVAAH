@@ -12,10 +12,11 @@ import {
 } from 'lucide-react';
 import { getStoredUser } from '../lib/api';
 
-const PUBLIC_ROUTES = ['/landing', '/login'];
+const PUBLIC_ROUTES = ['/', '/landing', '/login'];
 
 const PAGE_META: Record<string, { title: string; subtitle: string; icon: React.ElementType }> = {
-  '/':            { title: 'SOC Command Center',       subtitle: 'Passive email cryptographic security monitoring', icon: Zap },
+  '/':            { title: 'PRAVAAH Platform',         subtitle: 'AI-Assisted Email Cryptographic Forensics',        icon: Shield },
+  '/dashboard':   { title: 'SOC Command Center',       subtitle: 'Passive email cryptographic security monitoring', icon: Zap },
   '/ingest':      { title: 'PCAP Ingestion & Analysis',subtitle: 'Upload captured traffic for passive forensic analysis', icon: UploadCloud },
   '/sessions':    { title: 'Email Sessions',           subtitle: 'Reconstructed communication sessions from captured traffic', icon: Activity },
   '/evidence':    { title: 'Evidence Workspace',       subtitle: 'Frame & packet evidence correlation',              icon: Layers },
@@ -41,7 +42,7 @@ function getPageMeta(pathname: string) {
 export function AppShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const router = useRouter();
-  const isPublic = PUBLIC_ROUTES.some(r => pathname === r || pathname.startsWith(r + '/'));
+  const isPublic = PUBLIC_ROUTES.some(r => pathname === r || (r !== '/' && pathname.startsWith(r + '/')));
 
   const [checkingAuth, setCheckingAuth] = useState(!isPublic);
   const [isAuthenticated, setIsAuthenticated] = useState(isPublic);
@@ -52,7 +53,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
       if (!user) {
         setIsAuthenticated(false);
         setCheckingAuth(false);
-        router.replace('/login');
+        router.replace('/');
       } else {
         setIsAuthenticated(true);
         setCheckingAuth(false);
@@ -65,7 +66,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
 
   /* Public layout (landing / login) */
   if (isPublic) {
-    const isLanding = pathname === '/landing';
+    const isLanding = pathname === '/' || pathname === '/landing';
 
     return (
       <div className="flex flex-col min-h-screen bg-slate-50 dark:bg-slate-950">

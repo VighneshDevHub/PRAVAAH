@@ -13,12 +13,12 @@ import { getStoredUser, logoutApi } from '../lib/api';
 import { ThemeToggle } from './ThemeToggle';
 
 const APP_NAV_LINKS = [
-  { href: '/landing', label: 'Home',          icon: Home },
-  { href: '/',        label: 'SOC Dashboard', icon: LayoutDashboard },
-  { href: '/upload',  label: 'Ingest PCAP',   icon: UploadCloud },
-  { href: '/findings',label: 'Findings',      icon: FileSearch },
-  { href: '/terminal',label: 'CLI',           icon: Terminal },
-  { href: '/reports', label: 'Reports',       icon: FileText },
+  { href: '/',          label: 'Home',          icon: Home },
+  { href: '/dashboard', label: 'SOC Dashboard', icon: LayoutDashboard },
+  { href: '/upload',    label: 'Ingest PCAP',   icon: UploadCloud },
+  { href: '/findings',  label: 'Findings',      icon: FileSearch },
+  { href: '/terminal',  label: 'CLI',           icon: Terminal },
+  { href: '/reports',   label: 'Reports',       icon: FileText },
 ];
 
 const LANDING_NAV_LINKS = [
@@ -44,7 +44,7 @@ export const Navbar: React.FC = () => {
   const [menuOpen, setMenuOpen]   = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
 
-  const isLanding = pathname === '/landing';
+  const isLanding = pathname === '/' || pathname === '/landing';
   const isLogin   = pathname === '/login';
   const navLinks  = isLanding || isLogin ? LANDING_NAV_LINKS : APP_NAV_LINKS;
 
@@ -80,8 +80,8 @@ export const Navbar: React.FC = () => {
 
   const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
     if (href.startsWith('#')) {
-      if (pathname !== '/landing') {
-        router.push(`/landing${href}`);
+      if (pathname !== '/' && pathname !== '/landing') {
+        router.push(`/${href}`);
       } else {
         e.preventDefault();
         const target = document.querySelector(href);
@@ -112,7 +112,7 @@ export const Navbar: React.FC = () => {
         <div className="max-w-[1760px] mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between h-16 gap-4">
 
           {/* ── Logo with NTRO Image ── */}
-          <Link href="/landing" className="flex items-center gap-3 shrink-0 group">
+          <Link href="/" className="flex items-center gap-3 shrink-0 group">
             <div className="flex items-center gap-2">
               <img
                 src="/ntro-logo3.png"
@@ -220,7 +220,7 @@ export const Navbar: React.FC = () => {
             {/* Dashboard Redirect Button (hidden on /login) */}
             {!isLogin && (
               <Link
-                href="/"
+                href="/dashboard"
                 className="btn-primary text-xs sm:text-[13px] px-3 sm:px-3.5 py-1.5 sm:py-2 rounded-xl flex items-center gap-1.5 sm:gap-2 font-bold font-grotesk shadow-sm hover:shadow transition-all whitespace-nowrap shrink-0"
               >
                 <LayoutDashboard className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-white shrink-0" />
@@ -231,7 +231,7 @@ export const Navbar: React.FC = () => {
             {/* Back to Landing Platform button (shown on /login) */}
             {isLogin && (
               <Link
-                href="/landing"
+                href="/"
                 className="btn-ghost text-xs sm:text-[13px] px-3 py-1.5 rounded-xl flex items-center gap-1.5 font-bold font-grotesk border border-slate-200 dark:border-slate-800 whitespace-nowrap shrink-0"
               >
                 <Home className="w-3.5 h-3.5 text-blue-600 shrink-0" />

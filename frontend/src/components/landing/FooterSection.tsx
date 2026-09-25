@@ -40,11 +40,11 @@ export const FooterSection: React.FC = () => {
           <div className="space-y-2">
             <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">PLATFORM NAVIGATION</span>
             <ul className="space-y-1.5 text-slate-600 dark:text-slate-400">
-              <li><Link href="/landing#platform" className="hover:text-blue-600">Platform Overview</Link></li>
-              <li><Link href="/landing#capabilities" className="hover:text-blue-600">Capabilities</Link></li>
-              <li><Link href="/landing#pipeline" className="hover:text-blue-600">Pipeline Forensics</Link></li>
+              <li><Link href="/#platform" className="hover:text-blue-600">Platform Overview</Link></li>
+              <li><Link href="/#capabilities" className="hover:text-blue-600">Capabilities</Link></li>
+              <li><Link href="/#pipeline" className="hover:text-blue-600">Pipeline Forensics</Link></li>
               <li><Link href="/reports" className="hover:text-blue-600">Report Export Hub</Link></li>
-              <li><Link href="/" className="hover:text-blue-600">SOC Dashboard</Link></li>
+              <li><Link href="/dashboard" className="hover:text-blue-600">SOC Dashboard</Link></li>
             </ul>
           </div>
 

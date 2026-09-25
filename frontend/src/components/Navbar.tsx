@@ -14,7 +14,7 @@ import { ThemeToggle } from './ThemeToggle';
 
 const APP_NAV_LINKS = [
   { href: '/',          label: 'Home',          icon: Home },
-  { href: '/dashboard', label: 'SOC Dashboard', icon: LayoutDashboard },
+  { href: '/console',   label: 'SOC Dashboard', icon: LayoutDashboard },
   { href: '/upload',    label: 'Ingest PCAP',   icon: UploadCloud },
   { href: '/findings',  label: 'Findings',      icon: FileSearch },
   { href: '/terminal',  label: 'CLI',           icon: Terminal },
@@ -220,7 +220,7 @@ export const Navbar: React.FC = () => {
             {/* Dashboard Redirect Button (hidden on /login) */}
             {!isLogin && (
               <Link
-                href="/dashboard"
+                href="/console"
                 className="btn-primary text-xs sm:text-[13px] px-3 sm:px-3.5 py-1.5 sm:py-2 rounded-xl flex items-center gap-1.5 sm:gap-2 font-bold font-grotesk shadow-sm hover:shadow transition-all whitespace-nowrap shrink-0"
               >
                 <LayoutDashboard className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-white shrink-0" />

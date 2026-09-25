@@ -83,7 +83,7 @@ export const LandingNavbar: React.FC = () => {
           </Link>
 
           <Link
-            href="/dashboard"
+            href="/console"
             className="btn-primary text-xs px-4 py-2 rounded-lg gap-1.5 font-bold shadow-sm"
           >
             <span>View Dashboard</span>

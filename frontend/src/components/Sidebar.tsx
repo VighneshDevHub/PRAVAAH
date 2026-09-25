@@ -28,7 +28,7 @@ const NAV_GROUPS: NavGroup[] = [
   {
     groupName: 'OVERVIEW',
     items: [
-      { href: '/dashboard', label: 'SOC Dashboard', icon: LayoutDashboard },
+      { href: '/console', label: 'SOC Dashboard', icon: LayoutDashboard },
     ],
   },
   {

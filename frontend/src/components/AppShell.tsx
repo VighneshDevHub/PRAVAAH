@@ -12,10 +12,11 @@ import {
 } from 'lucide-react';
 import { getStoredUser } from '../lib/api';
 
-const PUBLIC_ROUTES = ['/', '/landing', '/login', '/dashboard'];
+const PUBLIC_ROUTES = ['/', '/landing', '/login'];
 
 const PAGE_META: Record<string, { title: string; subtitle: string; icon: React.ElementType }> = {
   '/':            { title: 'PRAVAAH Platform',         subtitle: 'AI-Assisted Email Cryptographic Forensics',        icon: Shield },
+  '/console':     { title: 'SOC Command Center',       subtitle: 'Passive email cryptographic security monitoring', icon: Zap },
   '/dashboard':   { title: 'SOC Command Center',       subtitle: 'Passive email cryptographic security monitoring', icon: Zap },
   '/ingest':      { title: 'PCAP Ingestion & Analysis',subtitle: 'Upload captured traffic for passive forensic analysis', icon: UploadCloud },
   '/sessions':    { title: 'Email Sessions',           subtitle: 'Reconstructed communication sessions from captured traffic', icon: Activity },

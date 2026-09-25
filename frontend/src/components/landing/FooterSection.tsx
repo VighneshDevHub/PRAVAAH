@@ -44,7 +44,7 @@ export const FooterSection: React.FC = () => {
               <li><Link href="/#capabilities" className="hover:text-blue-600">Capabilities</Link></li>
               <li><Link href="/#pipeline" className="hover:text-blue-600">Pipeline Forensics</Link></li>
               <li><Link href="/reports" className="hover:text-blue-600">Report Export Hub</Link></li>
-              <li><Link href="/dashboard" className="hover:text-blue-600">SOC Dashboard</Link></li>
+              <li><Link href="/console" className="hover:text-blue-600">SOC Dashboard</Link></li>
             </ul>
           </div>
 

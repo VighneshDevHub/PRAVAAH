@@ -49,13 +49,13 @@ export default function LoginPage() {
     setLoading(true);
     try {
       await loginApi(username, password);
-      router.push('/dashboard');
+      router.push('/console');
     } catch (err: any) {
       if (typeof window !== 'undefined') {
         localStorage.setItem('auth_token', 'demo_token_123');
         localStorage.setItem('user_info', JSON.stringify({ username, role: username === 'admin' ? 'admin' : 'analyst' }));
       }
-      router.push('/dashboard');
+      router.push('/console');
     } finally {
       setLoading(false);
     }

@@ -53,7 +53,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
       if (!user) {
         setIsAuthenticated(false);
         setCheckingAuth(false);
-        router.replace('/');
+        router.replace('/login');
       } else {
         setIsAuthenticated(true);
         setCheckingAuth(false);

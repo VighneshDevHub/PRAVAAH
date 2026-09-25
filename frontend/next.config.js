@@ -8,7 +8,7 @@ const nextConfig = {
   },
 
   async rewrites() {
-    const backendUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
+    const backendUrl = process.env.NEXT_PUBLIC_API_URL || 'https://pravaah-l166.onrender.com';
     return [
       {
         source: '/api/v1/:path*',

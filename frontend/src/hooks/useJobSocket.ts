@@ -7,8 +7,12 @@ export function useJobSocket(jobId: string | null) {
   useEffect(() => {
     if (!jobId) return;
 
-    const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
-    const wsUrl = `${protocol}//${window.location.host}/ws/jobs/${jobId}`;
+    const isProd = typeof window !== 'undefined' && window.location.hostname !== 'localhost';
+    const defaultWsHost = isProd ? 'pravaah-l166.onrender.com' : window.location.host;
+    const protocol = window.location.protocol === 'https:' || isProd ? 'wss:' : 'ws:';
+    const wsUrl = process.env.NEXT_PUBLIC_WS_URL
+      ? `${process.env.NEXT_PUBLIC_WS_URL}/ws/jobs/${jobId}`
+      : `${protocol}//${defaultWsHost}/ws/jobs/${jobId}`;
     const socket = new WebSocket(wsUrl);
 
     socket.onmessage = (event) => {

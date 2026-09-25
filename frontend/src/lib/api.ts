@@ -1,6 +1,11 @@
 import { Job, Session, Finding, Recommendation } from './types';
 
-const API_BASE = '/api/v1';
+const RENDER_BACKEND = 'https://pravaah-l166.onrender.com';
+const API_BASE = process.env.NEXT_PUBLIC_API_URL
+  ? `${process.env.NEXT_PUBLIC_API_URL}/api/v1`
+  : typeof window !== 'undefined' && window.location.hostname !== 'localhost'
+  ? `${RENDER_BACKEND}/api/v1`
+  : '/api/v1';
 
 export async function signupApi(username: string, email: string, password: string, role = 'analyst') {
   const res = await fetch(`${API_BASE}/auth/signup`, {

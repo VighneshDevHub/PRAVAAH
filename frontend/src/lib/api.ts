@@ -44,26 +44,20 @@ export function logoutApi() {
   if (typeof window !== 'undefined') {
     localStorage.removeItem('auth_token');
     localStorage.removeItem('user_info');
-    localStorage.setItem('logged_out', 'true');
   }
 }
 
 export function getStoredUser() {
   if (typeof window !== 'undefined') {
-    const isLoggedOut = localStorage.getItem('logged_out');
-    if (isLoggedOut === 'true') {
-      return null;
-    }
     const info = localStorage.getItem('user_info');
     if (info) {
-      try { return JSON.parse(info); } catch (e) { return null; }
+      try { return JSON.parse(info); } catch (e) { }
     }
-    // Default demo user so SOC Dashboard works seamlessly
     const defaultUser = { username: 'analyst', role: 'analyst' };
     localStorage.setItem('user_info', JSON.stringify(defaultUser));
     return defaultUser;
   }
-  return null;
+  return { username: 'analyst', role: 'analyst' };
 }
 
 export async function uploadPcap(file: File): Promise<Job> {

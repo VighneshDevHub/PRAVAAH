@@ -12,7 +12,7 @@ import {
 } from 'lucide-react';
 import { getStoredUser } from '../lib/api';
 
-const PUBLIC_ROUTES = ['/', '/landing', '/login'];
+const PUBLIC_ROUTES = ['/', '/landing', '/login', '/dashboard'];
 
 const PAGE_META: Record<string, { title: string; subtitle: string; icon: React.ElementType }> = {
   '/':            { title: 'PRAVAAH Platform',         subtitle: 'AI-Assisted Email Cryptographic Forensics',        icon: Shield },
